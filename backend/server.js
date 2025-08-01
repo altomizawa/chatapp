@@ -1,6 +1,8 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
+
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+
 
 const app = express();
 const server = http.createServer(app);
@@ -15,11 +17,15 @@ io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
   socket.on('send-message', (message) => {
-    socket.broadcast.emit('receive-message', message)
+    console.log('Message received:', message);
+    socket.broadcast.emit('receive-message', {
+      message: message,
+      id: socket.id
+    });
   });
 
   socket.on('disconnect', () => {
-    console.log('A user disonnected');
+    console.log('A user disconnected');
   });
 })
 
